@@ -1,14 +1,15 @@
 const express = require('express');
 
-const router = express.Router();
-
 const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 
-const port = process.env.PORT|| 3300;
+const port = process.env.PORT || 3300;
 
 const app = express();
+
+// imported and configured dotenv
+require('dotenv').config();
 
 const userRoutes = require('./routes/user');
 
@@ -34,18 +35,15 @@ app.use((error, req, res, next) => {
     });
 });
 
-mongoose.connect("Your_mongoDB_URL_goes_here",{
+mongoose.connect(process.env.MONGODB_URI, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useFindAndModify: false
-})
-    .then(()=>{
-        console.log('Connection to DB');
-        app.listen(port,
-             ()=>{
-                console.log(`listening on port${port}`);
-            }
-        );
-    }).catch(err=>{
+}).then(() => {
+    console.log('Connection to DB');
+    app.listen(port, () => {
+        console.log(`listening on port${port}`);
+    });
+}).catch(err => {
     console.log(err);
 });
