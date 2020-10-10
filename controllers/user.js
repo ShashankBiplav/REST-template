@@ -1,7 +1,7 @@
 const User = require('../models/user');
 
-exports.signUp = async(req, res, next) => {
-    const {name, email, password,age} = req.body;
+exports.signUp = async (req, res, next) => {
+    const { name, email, password } = req.body;
     const user = new User({
         name: name,
         email: email,
@@ -13,15 +13,27 @@ exports.signUp = async(req, res, next) => {
             message: "Sign up successful",
             result: result
         });
-    }catch (err) {
+    } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
-        const message = err.message;
-        const data = err.data;
-        res.status(status).json({
-            message: message,
-            data: data
-        });
+        next(err);
     }
 };
+
+
+// code to fetch user information
+exports.getUserInfo = async (req, res, next) => {
+    try {
+        const users = await User.find();
+        res.status(200).json({
+            message: "User information fetched successfully",
+            users: users
+        });
+    } catch (error) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
